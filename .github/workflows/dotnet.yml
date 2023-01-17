@@ -1,0 +1,27 @@
+name: .NET
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+jobs:
+
+  AlinSpace_ConsoleHelper:
+    name: AlinSpace.ConsoleHelper
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v3
+    - name: Setup .NET
+      uses: actions/setup-dotnet@v3
+      with:
+        dotnet-version: 6.0.x
+    - name: Restore
+      run: dotnet restore AlinSpace.ConsoleHelper/AlinSpace.ConsoleHelper.csproj
+    - name: Building
+      run: dotnet build AlinSpace.ConsoleHelper/AlinSpace.ConsoleHelper.csproj --no-restore -c Release
+    - name: Pack
+      run: dotnet pack AlinSpace.ConsoleHelper/AlinSpace.ConsoleHelper.csproj -c Release -o . 
+    - name: Publish
+      run: dotnet nuget push AlinSpace.ConsoleHelper.*.nupkg -k ${{ secrets.NUGET_KEY }} -s https://api.nuget.org/v3/index.json --skip-duplicate

@@ -1,0 +1,17 @@
+{
+    "PathToSolutionFile": "AlinSpace.ConsoleHelper.sln",
+    "PathToLocalNugetFolder": "C:\\AlinSpace\\Nuget",
+    "PathToDebugFiles": "C:\\AlinSpace\\Pdbs",
+    "BuildInDebugConfiguration": true,
+    "Author": "Alin Andersen",
+    "Copyright": "Copyright © 2023 Alin Andersen",
+    "RepositoryUrl": "https://github.com/onixion/AlinSpace.ConsoleHelper",
+    "ProjectUrl": "https://github.com/onixion/AlinSpace.ConsoleHelper",
+    "Tags": "alinspace; alin; space; console helper;",
+    "Projects": [
+      {
+        "Name": "AlinSpace.ConsoleHelper",
+        "Tags": ""
+      }
+    ]
+  }
