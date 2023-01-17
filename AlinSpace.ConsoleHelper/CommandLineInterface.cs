@@ -5,7 +5,7 @@ namespace AlinSpace.ConsoleHelper
 {
     public static class CommandLineInterface
     {
-        public static async Task<string> ExecuteAsync(string command, CancellationToken cancellationToken = default)
+        public static async Task<string> ExecuteAsync(string command, bool throwException = false, CancellationToken cancellationToken = default)
         {
             ProcessStartInfo processStartInfo;
 
@@ -25,29 +25,56 @@ namespace AlinSpace.ConsoleHelper
                 {
                     UseShellExecute = false,
                     CreateNoWindow = true,
-                    RedirectStandardOutput = false
+                    RedirectStandardOutput = true
                 };
             }
             else
             {
-                throw new PlatformNotSupportedException();
+                if (throwException)
+                {
+                    throw new PlatformNotSupportedException();
+                }
+
+                return null;
             }
 
             var process = Process.Start(processStartInfo);
 
             if (process == null)
             {
-                throw new Exception("Unable to start process.");
+                if (throwException)
+                {
+                    throw new Exception("Unable to start process.");
+                }
+
+                return null;
             }
 
             while (!process.HasExited)
             {
-                await process.WaitForExitAsync(cancellationToken);
+                try
+                {
+                    await process.WaitForExitAsync(cancellationToken);
+                }
+                catch(Exception)
+                {
+                    if (throwException)
+                    {
+                        throw;
+                    }
+
+                    return null;
+                }
             }
 
             if (process.ExitCode != 0)
             {
-                throw new ExitCodeException(process.ExitCode);
+                if (throwException)
+                {
+                    throw new ExitCodeException(process.ExitCode);
+                }
+
+                return null;
             }
 
             try
@@ -55,10 +82,13 @@ namespace AlinSpace.ConsoleHelper
                 var output = await process.StandardOutput.ReadToStringAsync();
                 return output;
             }
-            catch (Exception e)
+            catch (Exception)
             {
-                Console.WriteLine($"Exception: {e.Message}");
-                Console.WriteLine(e.StackTrace);
+                if (throwException)
+                {
+                    throw;
+                }
+
                 return null;
             }
         }

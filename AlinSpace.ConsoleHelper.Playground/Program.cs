@@ -4,7 +4,7 @@
     {
         static void Main(string[] args)
         {
-            Console.WriteLine("Hello, World!");
+            var t = CommandLineInterface.ExecuteAsync("echo Test").Result;
         }
     }
 }
